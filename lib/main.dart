@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:june/Widgets/Screens/app_preferences_page.dart';
 import 'package:june/Widgets/Screens/home_page.dart';
 import 'package:june/Widgets/Screens/settings_page.dart';
+import 'package:june/Widgets/Screens/sign_in_page.dart';
 import 'package:june/Widgets/Screens/sign_up_page.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 import 'package:june/routes.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.homePage : (context) => HomePage(),
         Routes.signUpPage : (context) => SignUpPage(),
+        Routes.signInPage : (context) => SignInPage(),
         Routes.appPrefPage : (context) => AppPreferencesPage(),
         Routes.settingsPage : (context) => SettingsPage()
       },

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
 import 'package:june/Widgets/Cards/custom_default_card.dart';
 import 'package:june/Widgets/Form/custom_text_form_field.dart';
+import 'package:june/routes.dart';
 
 class SignUpCard extends StatefulWidget {
   const SignUpCard({
@@ -84,7 +85,7 @@ class _SignUpCardState extends State<SignUpCard> {
                 ),
               ),
               onTap: () {
-                
+                Navigator.of(context).pushNamed(Routes.signInPage);
               },
             ),
           ],

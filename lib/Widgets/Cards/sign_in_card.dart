@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
 import 'package:june/Widgets/Cards/custom_default_card.dart';
 import 'package:june/Widgets/Form/custom_text_form_field.dart';
+import 'package:june/routes.dart';
 
 class SignInCard extends StatefulWidget {
   const SignInCard({super.key,
     required this.emailController,
     required this.passwordController,
-    this.onSignUpButtonPressed
+    this.onSignInButtonPressed
   });
 
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final Function()? onSignUpButtonPressed;
+  final Function()? onSignInButtonPressed;
   @override
   State<SignInCard> createState() => _SignInCardState();
 }
@@ -29,7 +30,7 @@ class _SignInCardState extends State<SignInCard> {
           mainAxisSize: MainAxisSize.min ,
           children: [
             Text(
-              "Create Account",
+              "Sign In",
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(),
             ),
             SizedBox(height: 24,),
@@ -57,23 +58,23 @@ class _SignInCardState extends State<SignInCard> {
             ),
             SizedBox(height: 24,),
             CustomElevatedPrimaryButton(
-              onPressed: widget.onSignUpButtonPressed, 
-              text: "Sign Up"
+              onPressed: widget.onSignInButtonPressed, 
+              text: "Sign In"
             ),
             SizedBox(height: 24,),
             Text(
-              "Already have an account?",
+              "Don't have an account?",
               style: Theme.of(context).textTheme.labelSmall,
             ),
             GestureDetector(
               child: Text(
-                "Sign In",
+                "Sign Up",
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
                   color: Theme.of(context).colorScheme.primary
                 ),
               ),
               onTap: () {
-                
+                Navigator.of(context).pushNamed(Routes.signUpPage);
               },
             ),
           ],
