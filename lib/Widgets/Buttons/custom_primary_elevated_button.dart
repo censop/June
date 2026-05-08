@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 
-class CustomElevatedButton extends StatefulWidget {
-  const CustomElevatedButton({
+class CustomElevatedPrimaryButton extends StatefulWidget {
+  const CustomElevatedPrimaryButton({
     super.key,
     required this.onPressed,
     required this.text,
@@ -13,10 +13,10 @@ class CustomElevatedButton extends StatefulWidget {
 
 
   @override
-  State<CustomElevatedButton> createState() => _CustomElevatedButtonState();
+  State<CustomElevatedPrimaryButton> createState() => _CustomElevatedPrimaryButtonState();
 }
 
-class _CustomElevatedButtonState extends State<CustomElevatedButton> {
+class _CustomElevatedPrimaryButtonState extends State<CustomElevatedPrimaryButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(

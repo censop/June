@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             TaskCard(task: dummyTask,),
             DayCard(day: day),
             CustomTextFormField(),
-            CustomElevatedButton(
+            CustomElevatedPrimaryButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(Routes.signUpPage);
               }, 

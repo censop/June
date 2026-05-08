@@ -33,7 +33,9 @@ class _SignUpPageState extends State<SignUpPage> {
             nameController: _nameController,
             passwordController: _passwordController,
             emailController: _emailController,
+            onSignUpButtonPressed: () {},
           ),
+          //TERMS AND CONDITIONS A AGREELEMEKLE OLAN KISMI YAPMAYI UNUTMAAAA
         ),
       ),
     );

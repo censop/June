@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
 import 'package:june/Widgets/Cards/custom_default_card.dart';
 import 'package:june/Widgets/Form/custom_text_form_field.dart';
 
@@ -7,12 +9,14 @@ class SignUpCard extends StatefulWidget {
     super.key,
     required this.nameController,
     required this.emailController,
-    required this.passwordController
+    required this.passwordController,
+    this.onSignUpButtonPressed
   });
 
   final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final Function()? onSignUpButtonPressed;
 
 
   @override
@@ -30,6 +34,11 @@ class _SignUpCardState extends State<SignUpCard> {
         child: Column(
           mainAxisSize: MainAxisSize.min ,
           children: [
+            Text(
+              "Create Account",
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(),
+            ),
+            SizedBox(height: 24,),
             CustomTextFormField(
               controller: widget.nameController,
               title: "Name",
@@ -56,7 +65,28 @@ class _SignUpCardState extends State<SignUpCard> {
                 },
               ),
               obscureText: seePassword,
-            )
+            ),
+            SizedBox(height: 24,),
+            CustomElevatedPrimaryButton(
+              onPressed: widget.onSignUpButtonPressed, 
+              text: "Sign Up"
+            ),
+            SizedBox(height: 24,),
+            Text(
+              "Already have an account?",
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+            GestureDetector(
+              child: Text(
+                "Sign In",
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary
+                ),
+              ),
+              onTap: () {
+                
+              },
+            ),
           ],
         ),
       ),
