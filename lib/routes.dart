@@ -4,4 +4,5 @@ class Routes {
   static String signInPage = "/signIn";
   static String appPrefPage = "/appPref";
   static String settingsPage = "/settings";
+  static String forgotPasswordPage = "/forgotPassword";
 }

@@ -5,7 +5,8 @@ import 'package:june/Widgets/Form/custom_text_form_field.dart';
 import 'package:june/routes.dart';
 
 class SignInCard extends StatefulWidget {
-  const SignInCard({super.key,
+  const SignInCard({
+    super.key,
     required this.emailController,
     required this.passwordController,
     this.onSignInButtonPressed
@@ -42,7 +43,7 @@ class _SignInCardState extends State<SignInCard> {
             CustomTextFormField(
               controller: widget.passwordController,
               title: "Password",
-              suffixIcon: IconButton(
+              suffixWidget: IconButton(
                 icon: Icon(
                   seePassword
                       ? Icons.visibility_off
@@ -55,6 +56,21 @@ class _SignInCardState extends State<SignInCard> {
                 },
               ),
               obscureText: seePassword,
+            ),
+            SizedBox(height: 8,),
+            GestureDetector(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Forgot passoword?",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).pushNamed(Routes.forgotPasswordPage);
+              },
             ),
             SizedBox(height: 24,),
             CustomElevatedPrimaryButton(

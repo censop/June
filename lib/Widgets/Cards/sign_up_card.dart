@@ -53,7 +53,7 @@ class _SignUpCardState extends State<SignUpCard> {
             CustomTextFormField(
               controller: widget.passwordController,
               title: "Password",
-              suffixIcon: IconButton(
+              suffixWidget: IconButton(
                 icon: Icon(
                   seePassword
                       ? Icons.visibility_off

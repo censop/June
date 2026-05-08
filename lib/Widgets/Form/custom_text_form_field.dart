@@ -8,19 +8,19 @@ class CustomTextFormField extends StatelessWidget {
     this.title,
     this.errorText,
     this.validator,
-    this.suffixIcon,
+    this.suffixWidget,
     this.obscureText = false,
     this.editable = true,
     this.onChanged,
-    this.prefixIcon,
+    this.prefixWidget,
   });
 
   final TextEditingController? controller;
   final String? title;
   final String? errorText;
   final String? Function(String?)? validator;
-  final Widget? suffixIcon;
-  final Widget? prefixIcon;
+  final Widget? suffixWidget;
+  final Widget? prefixWidget;
   final bool obscureText;
   final bool editable;
   final ValueChanged<String>? onChanged;
@@ -40,8 +40,8 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
+        suffixIcon: suffixWidget,
+        prefixIcon: prefixWidget,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       ),
       obscureText: obscureText,
