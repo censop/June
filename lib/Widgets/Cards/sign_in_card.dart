@@ -1,29 +1,23 @@
-
 import 'package:flutter/material.dart';
 import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
 import 'package:june/Widgets/Cards/custom_default_card.dart';
 import 'package:june/Widgets/Form/custom_text_form_field.dart';
 
-class SignUpCard extends StatefulWidget {
-  const SignUpCard({
-    super.key,
-    required this.nameController,
+class SignInCard extends StatefulWidget {
+  const SignInCard({super.key,
     required this.emailController,
     required this.passwordController,
     this.onSignUpButtonPressed
   });
 
-  final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final Function()? onSignUpButtonPressed;
-
-
   @override
-  State<SignUpCard> createState() => _SignUpCardState();
+  State<SignInCard> createState() => _SignInCardState();
 }
 
-class _SignUpCardState extends State<SignUpCard> {
+class _SignInCardState extends State<SignInCard> {
   bool seePassword = true;
 
   @override
@@ -39,11 +33,6 @@ class _SignUpCardState extends State<SignUpCard> {
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(),
             ),
             SizedBox(height: 24,),
-            CustomTextFormField(
-              controller: widget.nameController,
-              title: "Name",
-            ),
-            SizedBox(height: 20,),
             CustomTextFormField(
               controller: widget.emailController,
               title: "Email",

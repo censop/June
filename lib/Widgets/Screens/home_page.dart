@@ -34,11 +34,15 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {}, 
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.appPrefPage);
+            }, 
             icon: Icon(Icons.tune) 
           ),
           IconButton(
-            onPressed: () {}, 
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.settingsPage);
+            }, 
             icon: Icon(Icons.settings)
           )
         ],
