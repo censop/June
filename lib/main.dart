@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:june/Widgets/Screens/app_preferences_page.dart';
-import 'package:june/Widgets/Screens/forgot_password_page.dart';
-import 'package:june/Widgets/Screens/home_page.dart';
-import 'package:june/Widgets/Screens/settings_page.dart';
-import 'package:june/Widgets/Screens/sign_in_page.dart';
-import 'package:june/Widgets/Screens/sign_up_page.dart';
+import 'package:june/Widgets/Pages/NavigationBar/navigation_bar_scaffold.dart';
+import 'package:june/Widgets/Pages/app_preferences_page.dart';
+import 'package:june/Widgets/Pages/forgot_password_page.dart';
+import 'package:june/Widgets/Pages/NavigationBar/home_page.dart';
+import 'package:june/Widgets/Pages/NavigationBar/settings_page.dart';
+import 'package:june/Widgets/Pages/sign_in_page.dart';
+import 'package:june/Widgets/Pages/sign_up_page.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 import 'package:june/routes.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "June",
       navigatorObservers: [routeObserver],
-      home: HomePage(), //placeholder until sign in implemented
+      home: NavigationBarScaffold(), //placeholder until sign in implemented
       routes: {
         Routes.homePage : (context) => HomePage(),
         Routes.signUpPage : (context) => SignUpPage(),

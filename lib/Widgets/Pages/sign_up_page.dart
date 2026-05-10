@@ -29,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SignUpCard(
+          child: SignUpCard( ///TODO: SO VERY IMPORTANT!!!! PUSHNAMED YERİNEREPLACED KULLAN LOGIC GELİNCE!!
             nameController: _nameController,
             passwordController: _passwordController,
             emailController: _emailController,
