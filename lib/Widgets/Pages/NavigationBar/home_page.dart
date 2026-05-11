@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:june/Models/day.dart';
 import 'package:june/Models/task.dart';
-import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
-import 'package:june/Widgets/Cards/day_card.dart';
 import 'package:june/Widgets/Cards/task_card.dart';
 import 'package:june/Widgets/DateSlider/date_slider.dart';
-import 'package:june/Widgets/Form/custom_text_form_field.dart';
-import 'package:june/routes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +14,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late String todayString;
+
+  late List<Task> tasks = [ //DUMMY TASK
+    Task(taskName: "Study block", description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30))
+  ];
 
   @override
   void initState() {
@@ -45,17 +45,18 @@ class _HomePageState extends State<HomePage> {
                 color: Theme.of(context).colorScheme.onSurface.withAlpha(100)
               ),
             ),
-            SizedBox(height: 16,),
-            // TaskCard(task: dummyTask,),
-            // DayCard(day: day),
-            // CustomTextFormField(),
-            // CustomElevatedPrimaryButton(
-            //   onPressed: () {
-            //     Navigator.of(context).pushNamed(Routes.signUpPage);
-            //   }, 
-            //   text: "lala"
-            // ),
-            DateSlider()
+            SizedBox(height: 20,),
+            DateSlider(),
+            SizedBox(height: 20,),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                final Task currTask = tasks[index];
+
+                return TaskCard(task: currTask);
+              },
+            ),
           ] 
         ),
       ),

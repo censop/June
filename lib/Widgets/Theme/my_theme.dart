@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyTheme {
 
   static const String interFont = "Inter";
+  static const String geistFont = "Geist";
 
   static const Color primaryColor = Color(0xFF1D8EF5);
   static const Color secondaryColor = Color(0xFFF8FAFC);
@@ -23,7 +24,7 @@ class MyTheme {
     
     // Major Page Headers (e.g., "Good morning, Julian.")
     headlineMedium: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 28.0,
       fontWeight: FontWeight.w300, // Light
       letterSpacing: -0.5, // tracking-tight
@@ -31,7 +32,7 @@ class MyTheme {
 
     // App Bar Titles / Important Names (e.g., "Beliz")
     titleLarge: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 18.0,
       fontWeight: FontWeight.w600, // Semi-bold
       letterSpacing: -0.5,
@@ -39,14 +40,14 @@ class MyTheme {
 
     // Standard List Items / Task Names (e.g., "Client alignment call")
     titleMedium: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 16.0,
       fontWeight: FontWeight.w400, // Normal
     ),
 
     // Headline Subtitles (e.g., "FRIDAY, JULY 12")
     titleSmall: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 14.0, // text-sm
       fontWeight: FontWeight.w500, // font-medium
       letterSpacing: 1.5, // tracking-widest
@@ -54,14 +55,14 @@ class MyTheme {
 
     // Standard Body Text
     bodyMedium: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 14.0,
       fontWeight: FontWeight.w400, // Normal
     ),
 
     // Section Headers (e.g., "CURRENT FOCUS", "UPCOMING")
     labelLarge: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 12.0, // text-xs
       fontWeight: FontWeight.w600, // Semi-bold
       letterSpacing: 2.0, // tracking-[0.2em]
@@ -70,7 +71,7 @@ class MyTheme {
 
     // Time blocks & Nav Items (e.g., "09:00 — 11:00", "Tasks")
     labelMedium: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 11.0, 
       fontWeight: FontWeight.w500, // Medium
       letterSpacing: 1.0, // tracking-wider
@@ -78,7 +79,7 @@ class MyTheme {
 
     // Tiny Tags & Badges (e.g., "3 LEFT", "FRI")
     labelSmall: const TextStyle(
-      fontFamily: interFont,
+      fontFamily: geistFont,
       fontSize: 10.0,
       fontWeight: FontWeight.w700, // Bold
     ),
@@ -89,7 +90,7 @@ class MyTheme {
   );
 
   static ThemeData lightTheme = ThemeData(
-    fontFamily: interFont,
+    fontFamily: geistFont,
     colorScheme: lightScheme,
     textTheme: textTheme,
   );
