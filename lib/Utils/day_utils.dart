@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FormatUtils {
+class DayUtils {
   static TimeOfDay stringToTimeOfDay(String timeString) {
     final parts = timeString.split(':');
     if (parts.length != 2) return TimeOfDay(hour: 0, minute: 0);
@@ -25,6 +25,27 @@ class FormatUtils {
     final String d = now.day.toString().padLeft(2, '0');
     
     return '$y-$m-$d';
+  }
+
+  static List<DateTime> entireWeekDays() {
+    List<DateTime> dates = [];
+
+    DateTime today = DateTime.now();
+    
+    // 2. Calculate how many days have passed since Monday
+    // In Dart, weekday 1 is Monday, 2 is Tuesday, etc.
+    int daysSinceMonday = today.weekday - 1;
+    
+    // 3. Subtract those days to get the exact date of this week's Monday
+    DateTime monday = today.subtract(Duration(days: daysSinceMonday));
+
+    // 4. Generate exactly 7 days starting from that Monday
+    dates = List.generate(
+      7, 
+      (index) => monday.add(Duration(days: index)),
+    );
+
+    return dates;
   }
   
 }

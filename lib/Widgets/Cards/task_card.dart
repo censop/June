@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DateUtils;
 import 'package:june/Models/task.dart';
-import 'package:june/Utils/format_utils.dart';
+import 'package:june/Utils/day_utils.dart';
 import 'package:june/Widgets/Cards/custom_default_card.dart';
 
 class TaskCard extends StatefulWidget {
@@ -36,7 +36,7 @@ class _TaskCardState extends State<TaskCard> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
-                    "${FormatUtils.timeOfDayToString(widget.task.startTime)} - ${FormatUtils.timeOfDayToString(widget.task.endTime)}",
+                    "${DayUtils.timeOfDayToString(widget.task.startTime)} - ${DayUtils.timeOfDayToString(widget.task.endTime)}",
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: Theme.of(context).colorScheme.onSurface.withAlpha(150)

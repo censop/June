@@ -40,7 +40,7 @@ class DateSliderItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 DateFormat('d').format(date), // 12, 13
-                style: TextStyle(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontSize: 22,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   color: isSelected ? primaryColor : unselectedTextColor,
