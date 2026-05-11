@@ -4,6 +4,8 @@ import 'package:june/Models/task.dart';
 import 'package:june/Widgets/Buttons/custom_primary_elevated_button.dart';
 import 'package:june/Widgets/Cards/day_card.dart';
 import 'package:june/Widgets/Cards/task_card.dart';
+import 'package:june/Widgets/DateSlider/date_slider.dart';
+import 'package:june/Widgets/DateSlider/date_slider_item.dart';
 import 'package:june/Widgets/Form/custom_text_form_field.dart';
 import 'package:june/routes.dart';
 
@@ -44,7 +46,8 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushNamed(Routes.signUpPage);
               }, 
               text: "lala"
-            )
+            ),
+            DateSlider()
           ] 
         ),
       ),

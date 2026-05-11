@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:june/Widgets/Pages/NavigationBar/navigation_bar_scaffold.dart';
 import 'package:june/Widgets/Pages/app_preferences_page.dart';
-import 'package:june/Widgets/Pages/forgot_password_page.dart';
+import 'package:june/Widgets/Pages/Authentication/forgot_password_page.dart';
 import 'package:june/Widgets/Pages/NavigationBar/home_page.dart';
 import 'package:june/Widgets/Pages/NavigationBar/settings_page.dart';
-import 'package:june/Widgets/Pages/sign_in_page.dart';
-import 'package:june/Widgets/Pages/sign_up_page.dart';
+import 'package:june/Widgets/Pages/Authentication/sign_in_page.dart';
+import 'package:june/Widgets/Pages/Authentication/sign_up_page.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 import 'package:june/routes.dart';
 
