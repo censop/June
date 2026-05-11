@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   late String todayString;
 
   late List<Task> tasks = [ //DUMMY TASK
-    Task(taskName: "Study block", description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30))
+    Task(taskName: "Study block", date: DateTime.now(), description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30))
   ];
 
   @override
@@ -69,9 +69,4 @@ class _HomePageState extends State<HomePage> {
 
     return formattedDate;
   }
-
-
-  //DUMMY TASK FOR TEST 
-  Task dummyTask = Task(taskName: "Study block", description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30));
-  late Day day = Day(date: DateTime.now(), tasks: [Task(taskName: "Study block", description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30)), Task(taskName: "Do stuff", description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30))]);
 }

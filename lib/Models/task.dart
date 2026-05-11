@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class Task {
-  final String taskName;
-  final String description;
-  final TimeOfDay startTime;
-  final TimeOfDay endTime;
-  final bool isCompleted;
+  String taskName;
+  String description;
+  DateTime date; 
+  TimeOfDay startTime;
+  TimeOfDay endTime;
+  bool? isCompleted;
 
   Task({
     required this.taskName,
-    required this.description,
+    this.description = "",
+    required this.date,
     required this.startTime,
     required this.endTime,
     this.isCompleted = false,
@@ -18,6 +20,7 @@ class Task {
   Task copyWith({
     String? taskName,
     String? description,
+    DateTime? date,
     TimeOfDay? startTime,
     TimeOfDay? endTime,
     bool? isCompleted,
@@ -25,6 +28,7 @@ class Task {
     return Task(
       taskName: taskName ?? this.taskName,
       description: description ?? this.description,
+      date: date ?? this.date,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -35,6 +39,7 @@ class Task {
     return {
       'taskName': taskName,
       'description': description,
+      'date': date.toIso8601String(), 
       'startTime': '${startTime.hour}:${startTime.minute}',
       'endTime': '${endTime.hour}:${endTime.minute}',
       'isCompleted': isCompleted,
@@ -42,7 +47,6 @@ class Task {
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
-    // Helper function to parse the "HH:mm" string back into a TimeOfDay object
     TimeOfDay parseTime(String timeString) {
       final parts = timeString.split(':');
       return TimeOfDay(
@@ -54,6 +58,7 @@ class Task {
     return Task(
       taskName: map['taskName'] ?? '',
       description: map['description'] ?? '',
+      date: map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(), 
       startTime: parseTime(map['startTime'] ?? '00:00'),
       endTime: parseTime(map['endTime'] ?? '00:00'),
       isCompleted: map['isCompleted'] ?? false,

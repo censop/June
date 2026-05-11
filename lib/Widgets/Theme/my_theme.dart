@@ -26,23 +26,22 @@ class MyTheme {
     headlineMedium: const TextStyle(
       fontFamily: geistFont,
       fontSize: 28.0,
-      fontWeight: FontWeight.w300, // Light
+      fontWeight: FontWeight.w500, // Light
       letterSpacing: -0.5, // tracking-tight
     ),
 
-    // App Bar Titles / Important Names (e.g., "Beliz")
+    // Standard List Items / Task Names (e.g., "Client alignment call")
     titleLarge: const TextStyle(
       fontFamily: geistFont,
-      fontSize: 18.0,
-      fontWeight: FontWeight.w600, // Semi-bold
-      letterSpacing: -0.5,
+      fontSize: 20.0,
+      fontWeight: FontWeight.w600,
     ),
 
-    // Standard List Items / Task Names (e.g., "Client alignment call")
+    // Task descriptions
     titleMedium: const TextStyle(
       fontFamily: geistFont,
       fontSize: 16.0,
-      fontWeight: FontWeight.w400, // Normal
+      fontWeight: FontWeight.w500, // Normal
     ),
 
     // Headline Subtitles (e.g., "FRIDAY, JULY 12")
@@ -69,7 +68,7 @@ class MyTheme {
       // Note: Use .toUpperCase() on the Text widget itself for uppercase
     ),
 
-    // Time blocks & Nav Items (e.g., "09:00 — 11:00", "Tasks")
+    // Time blocks & Nav Items (e.g., "09:00 — 11:00 "Tasks")
     labelMedium: const TextStyle(
       fontFamily: geistFont,
       fontSize: 11.0, 
