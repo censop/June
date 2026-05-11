@@ -16,7 +16,18 @@ class _HomePageState extends State<HomePage> {
   late String todayString;
 
   late List<Task> tasks = [ //DUMMY TASK
-    Task(taskName: "Study block", date: DateTime.now(), description: "Tessst", startTime: TimeOfDay(hour: 11, minute: 30), endTime: TimeOfDay(hour: 15, minute: 30))
+    Task(
+      taskName: "Study block", 
+      date: DateTime.now(), 
+      description: "Tessst", 
+      startTime: TimeOfDay(hour: 11, minute: 30), 
+      endTime: TimeOfDay(hour: 15, minute: 30)),
+    Task(
+      taskName: "Lalala Lololo", 
+      date: DateTime.now(), 
+      description: "", 
+      startTime: TimeOfDay(hour: 16, minute: 30), 
+      endTime: TimeOfDay(hour: 19, minute: 00)),
   ];
 
   @override
