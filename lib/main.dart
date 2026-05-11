@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:june/Widgets/Screens/home_page.dart';
+import 'package:june/Widgets/Screens/schedule_new.dart';
+import 'package:june/Widgets/Screens/sign_up_screen.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 import 'package:june/routes.dart';
 
@@ -17,9 +19,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "June",
       navigatorObservers: [routeObserver],
-      home: HomePage(), //placeholder until sign in implemented
+      home: const ScheduleNew(),
       routes: {
-        Routes.homePage : (context) => HomePage(),
+        Routes.homePage: (context) => const HomePage(),
+        Routes.signUpPage: (context) => const SignUpScreen(),
+        Routes.schedulePage: (context) => const ScheduleNew(),
       },
       theme: MyTheme.lightTheme,
     );

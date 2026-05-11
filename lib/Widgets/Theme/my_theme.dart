@@ -9,6 +9,20 @@ class MyTheme {
   static const Color tertiaryColor = Color(0xFFE2E8F0);
   static const Color neutralColor = Color(0xFF1E293B);
 
+  // Schedule palette
+  static const Color scheduleBg       = Color(0xFFF5F6FA);
+  static const Color schedulePurple   = Color(0xFF7B6CF6);
+  static const Color scheduleCardTint = Color(0xFFF7F6FF);
+  static const Color scheduleFab      = Color(0xFF1E3A6E);
+
+  // Auth / Sign-up palette
+  static const Color signUpBg = Color(0xFFEBECF8);
+  static const Color signUpTeal = Color(0xFF0D7A7A);
+  static const Color signUpGradientStart = Color(0xFF9477F5);
+  static const Color signUpGradientEnd = Color(0xFF5AD9F5);
+  static const Color signUpFieldBorder = Color(0xFFE4E7F2);
+  static const Color signUpSubtitle = Color(0xFF8892AB);
+
   // static final TextTheme _baseTextTheme = TextTheme(); //will fill it when ui is finalized
 
   static final ColorScheme lightScheme = ColorScheme.fromSeed(
