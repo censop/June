@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:june/Widgets/Pages/NavigationBar/navigation_bar_scaffold.dart';
-import 'package:june/Widgets/Pages/app_preferences_page.dart';
-import 'package:june/Widgets/Pages/Authentication/forgot_password_page.dart';
-import 'package:june/Widgets/Pages/NavigationBar/home_page.dart';
-import 'package:june/Widgets/Pages/NavigationBar/settings_page.dart';
-import 'package:june/Widgets/Pages/Authentication/sign_in_page.dart';
-import 'package:june/Widgets/Pages/Authentication/sign_up_page.dart';
+import 'package:june/Widgets/Screens/home_page.dart';
+import 'package:june/Widgets/Screens/schedule_new.dart';
+import 'package:june/Widgets/Screens/sign_up_screen.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 import 'package:june/routes.dart';
 
@@ -23,14 +19,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "June",
       navigatorObservers: [routeObserver],
-      home: NavigationBarScaffold(), //placeholder until sign in implemented
+      home: const ScheduleNew(),
       routes: {
-        Routes.homePage : (context) => HomePage(),
-        Routes.signUpPage : (context) => SignUpPage(),
-        Routes.signInPage : (context) => SignInPage(),
-        Routes.appPrefPage : (context) => AppPreferencesPage(),
-        Routes.settingsPage : (context) => SettingsPage(),
-        Routes.forgotPasswordPage : (context) => ForgotPasswordPage()
+        Routes.homePage: (context) => const HomePage(),
+        Routes.signUpPage: (context) => const SignUpScreen(),
+        Routes.schedulePage: (context) => const ScheduleNew(),
       },
       theme: MyTheme.lightTheme,
     );
