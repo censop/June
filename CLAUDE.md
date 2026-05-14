@@ -1,73 +1,39 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Commands
 
 ```bash
-flutter run                          # Run on connected device/emulator
-flutter run -d windows               # Run on Windows desktop
-flutter build apk                    # Build Android APK
-flutter analyze                      # Lint (uses flutter_lints)
-flutter test                         # Run all tests
-flutter test test/some_test.dart     # Run a single test file
-flutter pub get                      # Install dependencies
-flutter clean                        # Clean build artifacts
+flutter run                    # Run on connected device/emulator
+flutter run -d windows         # Run on Windows desktop
+flutter build apk              # Build Android APK
+flutter analyze                # Lint (uses flutter_lints)
+flutter test                   # Run all tests
+flutter pub get                # Install dependencies
+flutter clean                  # Clean build artifacts
 ```
 
 ## Architecture
 
-**june** is a Flutter daily planner app. The project is early-stage — `HomePage` currently uses dummy data and state management has not been added yet.
+**june** is a Flutter daily planner app. `AppShell` hosts the 4-tab `BottomNavigationBar` (Dashboard · Tasks · Schedule · AI). State management not yet added.
 
-### Directory layout
+### Theme
 
-```
-lib/
-  main.dart          # Entry point; MaterialApp with routeObserver and lightTheme
-  routes.dart        # Routes class with static string constants
-  Models/
-    task.dart        # Task (taskName, description, startTime/endTime as TimeOfDay, isCompleted)
-    day.dart         # Day (date, List<Task>); exposes dayNumber/shortName/longName getters
-  Utils/
-    format_utils.dart  # FormatUtils: TimeOfDay <-> "HH:mm" string conversion
-  Widgets/
-    Theme/
-      my_theme.dart  # MyTheme: all colors, text styles, and lightTheme in one place
-    Cards/
-      task_card.dart # TaskCard: name + time range + circular checkbox
-      day_card.dart  # DayCard: short day name, day number, long name, task count
-    Screens/
-      home_page.dart # HomePage (StatefulWidget, currently shows dummy Task and Day)
-```
+Design system: **Lumina Focus** — Hyper-Minimal Glassmorphism. Font: **Geist** (variable TTF).
 
-### Theme system
+All colors, text styles, and spacing live in `MyTheme` (`lib/Widgets/Theme/my_theme.dart`). Never hardcode colors or fonts in widgets.
 
-All colors and text styles are defined in `MyTheme` (`lib/Widgets/Theme/my_theme.dart`). Reference them via `Theme.of(context)` — never hardcode colors or fonts in widgets.
+Spacing tokens (dp): `spaceXs` 4 · `spaceSm` 8 · `spaceMd` 16 · `spaceLg` 24 · `spaceXl` 40 · `space2xl` 64
 
-| Token | Value | Semantic use |
-|---|---|---|
-| `primaryColor` | `#1D8EF5` | Interactive / accent |
-| `secondaryColor` | `#F8FAFC` | Light backgrounds |
-| `tertiaryColor` | `#E2E8F0` | Borders / dividers |
-| `neutralColor` | `#1E293B` | Default text |
+Border-radius tokens (dp): `radiusSm` 4 · `radiusMd` 8 · `radiusLg` 16 · `radiusXl` 24
 
-Text style slots (from `TextTheme`):
-- `headlineMedium` — major page headers
-- `titleLarge` — app bar titles / important names
-- `titleMedium` — list items / task names
-- `bodyMedium` — standard body text
-- `labelLarge` — section headers (UPPERCASE in widget via `.toUpperCase()`)
-- `labelMedium` — time blocks, nav items
-- `labelSmall` — tiny tags, badges (e.g. "FRI")
+### Card pattern
 
-### Data models
+`Colors.white` background · `elevation: 0.7` · `primaryColor.withAlpha(100)` shadow · `BorderRadius.circular(MyTheme.radiusLg)`
 
-Both `Task` and `Day` are immutable value objects with `copyWith`, `toMap`, and `fromMap`. `TimeOfDay` is serialized as `"HH:mm"` strings via `FormatUtils`.
+## Layout rules
 
-### Navigation
-
-Routes are string constants in `Routes`. A `RouteObserver<PageRoute>` (`routeObserver`) is wired into `MaterialApp.navigatorObservers` for future use.
-
-### Card widget pattern
-
-Cards use `Colors.white` background, `elevation: 0.7`, `primaryColor.withAlpha(100)` shadow, and `BorderRadius.circular(16)`. Follow this pattern for new card widgets.
+- **Spacing between siblings** — `SizedBox(width/height: x)` in Row/Column; never pad individual children to create gaps
+- **Padding** — outer and internal component padding only; never for inter-sibling spacing
+- **Container** — only when decoration, constraints, or background styling is needed; use a `Padding` wrapper instead of `Container(margin: ...)`
+- **Magic numbers** — avoid; prefer `MyTheme` spacing and radius tokens
+- **Expanded / Spacer** — use intentionally, not as a default space-filler

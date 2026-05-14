@@ -107,15 +107,15 @@ class _DayItem extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: MyTheme.spaceXs),
         Container(
           width: 42,
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: MyTheme.spaceSm),
           decoration: BoxDecoration(
             border: isSelected
                 ? Border.all(color: MyTheme.signUpTeal, width: 1.5)
                 : null,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(MyTheme.radiusLg),
           ),
           child: Column(
             children: [
@@ -123,7 +123,7 @@ class _DayItem extends StatelessWidget {
                 day.shortName,
                 style: theme.textTheme.labelSmall?.copyWith(color: color),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: MyTheme.spaceXs),
               Text(
                 day.dayNumber.toString(),
                 style: theme.textTheme.titleMedium?.copyWith(
