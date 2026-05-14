@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:june/Models/day.dart';
+import 'package:june/Widgets/Cards/custom_default_card.dart';
 
 class DayCard extends StatefulWidget {
   const DayCard({
@@ -17,13 +18,7 @@ class DayCard extends StatefulWidget {
 class _DayCardState extends State<DayCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 0.7,
-      shadowColor: Theme.of(context).colorScheme.primary.withAlpha(100),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), 
-      ),
+    return CustomDefaultCard(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16,24,16,24),
         child: Row(
