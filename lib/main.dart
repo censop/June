@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:june/Widgets/Pages/NavigationBar/settings_page.dart';
+import 'package:june/Widgets/Pages/app_preferences_page.dart';
 import 'package:june/Widgets/Screens/app_shell.dart';
 import 'package:june/Widgets/Screens/sign_up_screen.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
         Routes.signUpPage: (context) => const SignUpScreen(),
         Routes.schedulePage: (context) => const AppShell(initialIndex: 3),
         Routes.aiChatPage: (context) => const AppShell(initialIndex: 4),
+        Routes.appPrefPage: (context) => const AppPreferencesPage(),
+        Routes.settingsPage: (context) => const SettingsPage(),
       },
       theme: MyTheme.lightTheme,
     );

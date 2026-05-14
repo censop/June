@@ -3,4 +3,6 @@ class Routes {
   static String signUpPage = "/signup";
   static String schedulePage = "/schedule-new";
   static String aiChatPage = "/ai-chat";
+  static String appPrefPage = "/app-pref";
+  static String settingsPage = "/settings";
 }

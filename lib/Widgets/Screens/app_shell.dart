@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:june/Widgets/Pages/NavigationBar/home_page.dart';
 import 'package:june/Widgets/Screens/ai_chat_screen.dart';
-import 'package:june/Widgets/Screens/home_page.dart';
 import 'package:june/Widgets/Screens/schedule_new.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 
