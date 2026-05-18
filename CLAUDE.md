@@ -14,7 +14,38 @@ flutter clean                  # Clean build artifacts
 
 ## Architecture
 
-**june** is a Flutter daily planner app. `AppShell` hosts the 4-tab `BottomNavigationBar` (Dashboard · Tasks · Schedule · AI). State management not yet added.
+**june** is a Flutter daily planner app. `AppShell` hosts the 4-tab `BottomNavigationBar` (Dashboard · Tasks · Schedule · AI). State management not yet added — each page manages its own state with `setState`.
+
+Backend: **Supabase**. The global client lives in `lib/main.dart` and is accessed directly by service classes.
+
+### Data Models
+
+**`Task`** (`lib/Models/task.dart`) — fields: `id`, `title`, `startsAt`, `endsAt`, `status` (`'pending'` | `'completed'`), `userId`. Helpers: `isCompleted` getter, `timeRange` getter (12-hour format), `fromJson`, `copyWith`.
+
+**`Day`** (`lib/Models/day.dart`) — wraps a `DateTime` with a `List<Task>`. Helpers: `dayNumber`, `shortName` (MON–SUN), `longName`, `copyWith`.
+
+### Services
+
+**`TaskService`** (`lib/Services/task_service.dart`) — static Supabase-backed service:
+- `fetchForDate(DateTime)` — queries `tasks` table filtered by `user_id` and `starts_at` day range, ordered by `starts_at`
+- `insert({title, startsAt, endsAt})` — inserts a new task with `status: 'pending'`
+- `updateStatus(id, status)` — patches `status` on a single task
+
+Supabase `tasks` table columns: `id`, `title`, `starts_at`, `ends_at`, `status`, `user_id`.
+
+### Schedule page
+
+`ScheduleBody` (`lib/Widgets/Schedule/schedule_body.dart`) is the live, Supabase-connected schedule view. It generates a 60-day window (14 days back, 46 forward), loads tasks for the selected day via `TaskService.fetchForDate`, and handles completion toggling via `TaskService.updateStatus`.
+
+- **`ScheduleHeader`** (`lib/Widgets/Schedule/schedule_header.dart`) — shows "Schedule" title + two icon buttons: Google Calendar (stubbed) and add-task (opens `showNewTaskDialog`). Accepts `selectedDate` and `onTaskCreated` callback.
+- **`showNewTaskDialog`** (`lib/Widgets/Schedule/new_task_sheet.dart`) — modal dialog to create a task. Fields: title, subtasks (UI-only, not persisted to Supabase), time window (start/end `TimeOfDay`), impact level dropdown (not persisted). Saves via `TaskService.insert`.
+- **`ScheduleTaskCard`** (`lib/Widgets/Schedule/schedule_task_card.dart`) — card with left accent bar (teal = completed, primary = pending), title + time range, completion circle toggle, subtask list with per-item checkboxes, impact level badge (`ImpactLevel.high` / `.low`) with `PopupMenuButton`. Tap opens `showEditTaskDialog`.
+
+### Other widgets
+
+**`TaskCard`** (`lib/Widgets/Cards/task_card.dart`) — simpler card used on the Dashboard; accepts a `Task` and renders title + time range with a circular checkbox. Has an `isCurrentTask()` helper.
+
+**`old_home_page.dart`** (`lib/Widgets/Pages/NavigationBar/old_home_page.dart`) — legacy `HomePage` kept for reference; uses an empty in-memory task list and is not connected to Supabase.
 
 ### Theme
 

@@ -3,7 +3,14 @@ import 'package:june/Widgets/Schedule/new_task_sheet.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 
 class ScheduleHeader extends StatelessWidget {
-  const ScheduleHeader({super.key});
+  final DateTime selectedDate;
+  final VoidCallback onTaskCreated;
+
+  const ScheduleHeader({
+    super.key,
+    required this.selectedDate,
+    required this.onTaskCreated,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,13 @@ class ScheduleHeader extends StatelessWidget {
             tooltip: 'Add to Google Calendar',
           ),
           IconButton(
-            onPressed: () => showNewTaskDialog(context),
+            onPressed: () async {
+              final created = await showNewTaskDialog(
+                context,
+                selectedDate: selectedDate,
+              );
+              if (created == true) onTaskCreated();
+            },
             icon: const Icon(Icons.add_task),
             color: MyTheme.signUpTeal,
             tooltip: 'Add new task',

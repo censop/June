@@ -1,67 +1,52 @@
-import 'package:flutter/material.dart';
-
 class Task {
-  String taskName;
-  String description;
-  DateTime date; 
-  TimeOfDay startTime;
-  TimeOfDay endTime;
-  bool? isCompleted;
+  final String id;
+  final String title;
+  final DateTime startsAt;
+  final DateTime endsAt;
+  final String status;
+  final String userId;
 
-  Task({
-    required this.taskName,
-    this.description = "",
-    required this.date,
-    required this.startTime,
-    required this.endTime,
-    this.isCompleted = false,
+  const Task({
+    required this.id,
+    required this.title,
+    required this.startsAt,
+    required this.endsAt,
+    required this.status,
+    required this.userId,
   });
 
-  Task copyWith({
-    String? taskName,
-    String? description,
-    DateTime? date,
-    TimeOfDay? startTime,
-    TimeOfDay? endTime,
-    bool? isCompleted,
-  }) {
-    return Task(
-      taskName: taskName ?? this.taskName,
-      description: description ?? this.description,
-      date: date ?? this.date,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
-  }
+  bool get isCompleted => status == 'completed';
 
-  Map<String, dynamic> toMap() {
-    return {
-      'taskName': taskName,
-      'description': description,
-      'date': date.toIso8601String(), 
-      'startTime': '${startTime.hour}:${startTime.minute}',
-      'endTime': '${endTime.hour}:${endTime.minute}',
-      'isCompleted': isCompleted,
-    };
-  }
-
-  factory Task.fromMap(Map<String, dynamic> map) {
-    TimeOfDay parseTime(String timeString) {
-      final parts = timeString.split(':');
-      return TimeOfDay(
-        hour: int.parse(parts[0]),
-        minute: int.parse(parts[1]),
-      );
+  String get timeRange {
+    String fmt(DateTime dt) {
+      final hour = dt.hour == 0
+          ? 12
+          : dt.hour > 12
+              ? dt.hour - 12
+              : dt.hour;
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final period = dt.hour < 12 ? 'AM' : 'PM';
+      return '$hour:$minute $period';
     }
 
-    return Task(
-      taskName: map['taskName'] ?? '',
-      description: map['description'] ?? '',
-      date: map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(), 
-      startTime: parseTime(map['startTime'] ?? '00:00'),
-      endTime: parseTime(map['endTime'] ?? '00:00'),
-      isCompleted: map['isCompleted'] ?? false,
-    );
+    return '${fmt(startsAt)} – ${fmt(endsAt)}';
   }
+
+  factory Task.fromJson(Map<String, dynamic> json) => Task(
+        id: json['id'] as String,
+        title: json['title'] as String,
+        startsAt: DateTime.parse(json['starts_at'] as String),
+        endsAt: DateTime.parse(json['ends_at'] as String),
+        status: (json['status'] as String?) ?? 'pending',
+        userId: json['user_id'] as String,
+      );
+
+  Task copyWith({String? title, DateTime? startsAt, DateTime? endsAt, String? status}) => Task(
+        id: id,
+        title: title ?? this.title,
+        startsAt: startsAt ?? this.startsAt,
+        endsAt: endsAt ?? this.endsAt,
+        status: status ?? this.status,
+        userId: userId,
+      );
 }

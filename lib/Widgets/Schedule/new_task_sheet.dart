@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:june/Services/subtask_service.dart';
+import 'package:june/Services/task_service.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 
-void showNewTaskDialog(BuildContext context) {
-  showDialog(
+Future<bool?> showNewTaskDialog(
+  BuildContext context, {
+  required DateTime selectedDate,
+}) {
+  return showDialog<bool>(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.35),
-    builder: (_) => const _NewTaskDialog(),
+    builder: (_) => _NewTaskDialog(selectedDate: selectedDate),
   );
 }
 
 class _NewTaskDialog extends StatefulWidget {
-  const _NewTaskDialog();
+  final DateTime selectedDate;
+
+  const _NewTaskDialog({required this.selectedDate});
 
   @override
   State<_NewTaskDialog> createState() => _NewTaskDialogState();
@@ -22,6 +29,7 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
   TimeOfDay _startTime = const TimeOfDay(hour: 9, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 10, minute: 30);
   String _impact = 'Medium Impact';
+  bool _saving = false;
 
   static const _impacts = ['Low Impact', 'Medium Impact', 'High Impact'];
 
@@ -47,6 +55,38 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
     );
     if (picked == null || !mounted) return;
     setState(() => start ? _startTime = picked : _endTime = picked);
+  }
+
+  DateTime _toDateTime(TimeOfDay t) => DateTime(
+        widget.selectedDate.year,
+        widget.selectedDate.month,
+        widget.selectedDate.day,
+        t.hour,
+        t.minute,
+      );
+
+  Future<void> _save() async {
+    final title = _titleController.text.trim();
+    if (title.isEmpty) return;
+    setState(() => _saving = true);
+    try {
+      final taskId = await TaskService.insert(
+        title: title,
+        startsAt: _toDateTime(_startTime),
+        endsAt: _toDateTime(_endTime),
+      );
+      final subtaskTitles = _subtaskControllers
+          .map((c) => c.text.trim())
+          .where((t) => t.isNotEmpty)
+          .toList();
+      for (final t in subtaskTitles) {
+        await SubtaskService.insert(taskId: taskId, title: t);
+      }
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      debugPrint('Save task error: $e');
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -179,7 +219,7 @@ class _NewTaskDialogState extends State<_NewTaskDialog> {
             ),
             child: Column(
               children: [
-                _GradientButton(onPressed: () => Navigator.of(context).pop()),
+                _GradientButton(onPressed: _saving ? null : _save, saving: _saving),
                 const SizedBox(height: MyTheme.spaceSm),
                 Text(
                   'ESC TO CANCEL  •  ENTER TO SAVE',
@@ -364,8 +404,9 @@ class _TimeButton extends StatelessWidget {
 }
 
 class _GradientButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _GradientButton({required this.onPressed});
+  final VoidCallback? onPressed;
+  final bool saving;
+  const _GradientButton({required this.onPressed, required this.saving});
 
   @override
   Widget build(BuildContext context) {
@@ -374,21 +415,37 @@ class _GradientButton extends StatelessWidget {
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [MyTheme.primaryColor, MyTheme.secondaryContainerColor],
+          gradient: LinearGradient(
+            colors: [
+              saving
+                  ? MyTheme.primaryColor.withValues(alpha: 0.5)
+                  : MyTheme.primaryColor,
+              saving
+                  ? MyTheme.secondaryContainerColor.withValues(alpha: 0.5)
+                  : MyTheme.secondaryContainerColor,
+            ],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
           borderRadius: BorderRadius.circular(MyTheme.radiusLg),
         ),
         alignment: Alignment.center,
-        child: Text(
-          'Create Task',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: saving
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Colors.white,
+                ),
+              )
+            : Text(
+                'Create Task',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

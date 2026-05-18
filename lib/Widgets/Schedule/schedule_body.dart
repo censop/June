@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:june/Models/day.dart';
-import 'package:june/Widgets/Schedule/block_time_cta.dart';
+import 'package:june/Models/task.dart';
+import 'package:june/Services/task_service.dart';
 import 'package:june/Widgets/Schedule/schedule_header.dart';
 import 'package:june/Widgets/Schedule/welcome.dart';
 import 'package:june/Widgets/Schedule/schedule_task_card.dart';
 import 'package:june/Widgets/Schedule/week_day_strip.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
-
-final _days = List.generate(31, (i) => Day(date: DateTime(2025, 5, 1 + i)));
 
 class ScheduleBody extends StatefulWidget {
   const ScheduleBody({super.key});
@@ -17,7 +16,47 @@ class ScheduleBody extends StatefulWidget {
 }
 
 class _ScheduleBodyState extends State<ScheduleBody> {
-  int _selectedIndex = 13;
+  static const int _daysBefore = 14;
+  static const int _totalDays = 60;
+
+  late final List<Day> _days;
+  late int _selectedIndex;
+  List<Task> _tasks = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final today = DateTime.now();
+    final start = today.subtract(const Duration(days: _daysBefore));
+    _days = List.generate(
+      _totalDays,
+      (i) => Day(date: start.add(Duration(days: i))),
+    );
+    _selectedIndex = _daysBefore;
+    _loadTasks();
+  }
+
+  DateTime get _selectedDay => _days[_selectedIndex].date;
+
+  Future<void> _loadTasks() async {
+    setState(() => _isLoading = true);
+    try {
+      final tasks = await TaskService.fetchForDate(_selectedDay);
+      if (mounted) setState(() => _tasks = tasks);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _toggleCompletion(Task task, bool completed) async {
+    final newStatus = completed ? 'completed' : 'pending';
+    await TaskService.updateStatus(task.id, newStatus);
+    await _loadTasks();
+  }
+
+  Color _accentColor(Task task) =>
+      task.isCompleted ? MyTheme.signUpTeal : MyTheme.primaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +69,16 @@ class _ScheduleBodyState extends State<ScheduleBody> {
         WeekDayStrip(
           days: _days,
           selectedIndex: _selectedIndex,
-          onDaySelected: (i) => setState(() => _selectedIndex = i),
+          onDaySelected: (i) {
+            setState(() => _selectedIndex = i);
+            _loadTasks();
+          },
         ),
         const SizedBox(height: MyTheme.spaceMd),
-        const ScheduleHeader(),
+        ScheduleHeader(
+          selectedDate: _selectedDay,
+          onTaskCreated: _loadTasks,
+        ),
         const SizedBox(height: MyTheme.spaceMd),
         Expanded(
           child: SingleChildScrollView(
@@ -41,40 +86,43 @@ class _ScheduleBodyState extends State<ScheduleBody> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ScheduleTaskCard(
-                  title: 'Architecture Review',
-                  timeRange: '8:00 AM – 10:00 AM',
-                  accentColor: MyTheme.schedulePurple,
-                  subtasks: const [
-                    'Define system boundaries',
-                    'Review API contracts',
-                    'Document decisions',
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: MyTheme.spaceXl),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_tasks.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: MyTheme.spaceXl,
+                      horizontal: MyTheme.spaceMd,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'No tasks for this day.\nTap + to add one.',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: MyTheme.outlineColor,
+                            ),
+                      ),
+                    ),
+                  )
+                else
+                  for (var i = 0; i < _tasks.length; i++) ...[
+                    if (i > 0) const SizedBox(height: MyTheme.spaceSm),
+                    ScheduleTaskCard(
+                      key: ValueKey(_tasks[i].id),
+                      taskId: _tasks[i].id,
+                      taskDate: _selectedDay,
+                      title: _tasks[i].title,
+                      timeRange: _tasks[i].timeRange,
+                      accentColor: _accentColor(_tasks[i]),
+                      initialCompleted: _tasks[i].isCompleted,
+                      onCompletionChanged: (completed) =>
+                          _toggleCompletion(_tasks[i], completed),
+                      onTaskChanged: _loadTasks,
+                    ),
                   ],
-                ),
-                const SizedBox(height: MyTheme.spaceSm),
-                ScheduleTaskCard(
-                  title: 'Sync with Design Team',
-                  timeRange: '10:00 AM – 11:00 AM',
-                  accentColor: MyTheme.signUpTeal,
-                  subtasks: const [
-                    'Review new components',
-                    'Align on spacing tokens',
-                  ],
-                  initialImpact: ImpactLevel.low,
-                ),
-                const SizedBox(height: MyTheme.spaceSm),
-                ScheduleTaskCard(
-                  title: 'Documentation Update',
-                  timeRange: '11:00 AM – 12:00 PM',
-                  accentColor: MyTheme.signUpSubtitle,
-                  subtasks: const [
-                    'Update API docs',
-                    'Write changelog',
-                  ],
-                  initialImpact: ImpactLevel.low,
-                ),
-                const SizedBox(height: MyTheme.spaceMd),
-                const BlockTimeCta(),
                 const SizedBox(height: MyTheme.spaceMd),
               ],
             ),

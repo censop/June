@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:june/Widgets/Schedule/schedule_task_card.dart';
+import 'package:june/Models/subtask.dart';
+import 'package:june/Services/subtask_service.dart';
+import 'package:june/Services/task_service.dart';
+import 'package:june/Widgets/Schedule/impact_level.dart';
 import 'package:june/Widgets/Theme/my_theme.dart';
 
-void showEditTaskDialog(
+Future<bool?> showEditTaskDialog(
   BuildContext context, {
+  required String taskId,
+  required DateTime selectedDate,
   required String title,
   required String timeRange,
-  required List<String> subtasks,
+  required List<Subtask> subtasks,
   required ImpactLevel impact,
 }) {
-  showDialog(
+  return showDialog<bool>(
     context: context,
     barrierColor: Colors.black.withValues(alpha: 0.35),
     builder: (_) => _EditTaskDialog(
+      taskId: taskId,
+      selectedDate: selectedDate,
       title: title,
       timeRange: timeRange,
       subtasks: subtasks,
@@ -40,13 +47,23 @@ TimeOfDay _parseTime(String s) {
   return (const TimeOfDay(hour: 9, minute: 0), const TimeOfDay(hour: 10, minute: 0));
 }
 
+class _SubtaskEditEntry {
+  final TextEditingController controller;
+  bool done;
+  _SubtaskEditEntry({required this.controller, this.done = false});
+}
+
 class _EditTaskDialog extends StatefulWidget {
+  final String taskId;
+  final DateTime selectedDate;
   final String title;
   final String timeRange;
-  final List<String> subtasks;
+  final List<Subtask> subtasks;
   final ImpactLevel impact;
 
   const _EditTaskDialog({
+    required this.taskId,
+    required this.selectedDate,
     required this.title,
     required this.timeRange,
     required this.subtasks,
@@ -59,10 +76,11 @@ class _EditTaskDialog extends StatefulWidget {
 
 class _EditTaskDialogState extends State<_EditTaskDialog> {
   late final TextEditingController _titleController;
-  late List<TextEditingController> _subtaskControllers;
+  late List<_SubtaskEditEntry> _subtaskEntries;
   late TimeOfDay _startTime;
   late TimeOfDay _endTime;
   late String _impact;
+  bool _saving = false;
 
   static const _impacts = ['Low Impact', 'High Impact'];
 
@@ -70,9 +88,14 @@ class _EditTaskDialogState extends State<_EditTaskDialog> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.title);
-    _subtaskControllers = widget.subtasks.isEmpty
-        ? [TextEditingController()]
-        : widget.subtasks.map((s) => TextEditingController(text: s)).toList();
+    _subtaskEntries = widget.subtasks.isEmpty
+        ? [_SubtaskEditEntry(controller: TextEditingController())]
+        : widget.subtasks
+            .map((s) => _SubtaskEditEntry(
+                  controller: TextEditingController(text: s.title),
+                  done: s.done,
+                ))
+            .toList();
     final (start, end) = _parseTimeRange(widget.timeRange);
     _startTime = start;
     _endTime = end;
@@ -82,8 +105,8 @@ class _EditTaskDialogState extends State<_EditTaskDialog> {
   @override
   void dispose() {
     _titleController.dispose();
-    for (final c in _subtaskControllers) {
-      c.dispose();
+    for (final e in _subtaskEntries) {
+      e.controller.dispose();
     }
     super.dispose();
   }
@@ -101,6 +124,54 @@ class _EditTaskDialogState extends State<_EditTaskDialog> {
     );
     if (picked == null || !mounted) return;
     setState(() => start ? _startTime = picked : _endTime = picked);
+  }
+
+  DateTime _toDateTime(TimeOfDay t) => DateTime(
+        widget.selectedDate.year,
+        widget.selectedDate.month,
+        widget.selectedDate.day,
+        t.hour,
+        t.minute,
+      );
+
+  Future<void> _save() async {
+    final title = _titleController.text.trim();
+    if (title.isEmpty) return;
+    setState(() => _saving = true);
+    try {
+      await TaskService.update(
+        id: widget.taskId,
+        title: title,
+        startsAt: _toDateTime(_startTime),
+        endsAt: _toDateTime(_endTime),
+      );
+      await SubtaskService.deleteAllForTask(widget.taskId);
+      for (final entry in _subtaskEntries) {
+        final t = entry.controller.text.trim();
+        if (t.isNotEmpty) {
+          await SubtaskService.insert(
+            taskId: widget.taskId,
+            title: t,
+            done: entry.done,
+          );
+        }
+      }
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      debugPrint('Save task error: $e');
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _delete() async {
+    setState(() => _saving = true);
+    try {
+      await TaskService.delete(widget.taskId);
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      debugPrint('Delete task error: $e');
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -136,17 +207,21 @@ class _EditTaskDialogState extends State<_EditTaskDialog> {
                   const SizedBox(height: MyTheme.spaceLg),
                   _sectionLabel(theme, 'SUBTASKS'),
                   const SizedBox(height: MyTheme.spaceSm),
-                  for (var i = 0; i < _subtaskControllers.length; i++) ...[
+                  for (var i = 0; i < _subtaskEntries.length; i++) ...[
                     if (i > 0) const SizedBox(height: MyTheme.spaceXs),
                     _EditSubtaskRow(
                       key: ValueKey(i),
-                      controller: _subtaskControllers[i],
+                      controller: _subtaskEntries[i].controller,
+                      initialDone: _subtaskEntries[i].done,
+                      onDoneChanged: (v) => _subtaskEntries[i].done = v,
                     ),
                   ],
                   const SizedBox(height: MyTheme.spaceSm),
                   GestureDetector(
                     onTap: () => setState(
-                      () => _subtaskControllers.add(TextEditingController()),
+                      () => _subtaskEntries.add(
+                        _SubtaskEditEntry(controller: TextEditingController()),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -233,15 +308,15 @@ class _EditTaskDialogState extends State<_EditTaskDialog> {
             ),
             child: Column(
               children: [
-                _SaveButton(onPressed: () => Navigator.of(context).pop()),
+                _SaveButton(onPressed: _saving ? null : _save, saving: _saving),
                 const SizedBox(height: MyTheme.spaceSm),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: _saving ? null : _delete,
                   child: Text(
                     'DELETE TASK',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.redAccent,
+                      color: _saving ? Colors.redAccent.withValues(alpha: 0.4) : Colors.redAccent,
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -332,21 +407,38 @@ class _EditOutlinedField extends StatelessWidget {
 
 class _EditSubtaskRow extends StatefulWidget {
   final TextEditingController controller;
-  const _EditSubtaskRow({super.key, required this.controller});
+  final bool initialDone;
+  final void Function(bool) onDoneChanged;
+
+  const _EditSubtaskRow({
+    super.key,
+    required this.controller,
+    this.initialDone = false,
+    required this.onDoneChanged,
+  });
 
   @override
   State<_EditSubtaskRow> createState() => _EditSubtaskRowState();
 }
 
 class _EditSubtaskRowState extends State<_EditSubtaskRow> {
-  bool _checked = false;
+  late bool _checked;
+
+  @override
+  void initState() {
+    super.initState();
+    _checked = widget.initialDone;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         GestureDetector(
-          onTap: () => setState(() => _checked = !_checked),
+          onTap: () {
+            setState(() => _checked = !_checked);
+            widget.onDoneChanged(_checked);
+          },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             width: 18,
@@ -354,14 +446,14 @@ class _EditSubtaskRowState extends State<_EditSubtaskRow> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(MyTheme.radiusSm),
               color: _checked ? MyTheme.primaryColor : Colors.transparent,
-              border: Border.all(
-                color: _checked ? MyTheme.primaryColor : MyTheme.outlineVariantColor,
-                width: 1.5,
+                border: Border.all(
+                  color: _checked ? MyTheme.primaryColor : MyTheme.outlineVariantColor,
+                  width: 1.5,
+                ),
               ),
-            ),
-            child: _checked
-                ? const Icon(Icons.check, size: 11, color: Colors.white)
-                : null,
+              child: _checked
+                  ? const Icon(Icons.check, size: 11, color: Colors.white)
+                  : null,
           ),
         ),
         const SizedBox(width: MyTheme.spaceSm),
@@ -421,8 +513,9 @@ class _EditTimeButton extends StatelessWidget {
 }
 
 class _SaveButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _SaveButton({required this.onPressed});
+  final VoidCallback? onPressed;
+  final bool saving;
+  const _SaveButton({required this.onPressed, required this.saving});
 
   @override
   Widget build(BuildContext context) {
@@ -431,21 +524,37 @@ class _SaveButton extends StatelessWidget {
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [MyTheme.primaryColor, MyTheme.secondaryContainerColor],
+          gradient: LinearGradient(
+            colors: [
+              saving
+                  ? MyTheme.primaryColor.withValues(alpha: 0.5)
+                  : MyTheme.primaryColor,
+              saving
+                  ? MyTheme.secondaryContainerColor.withValues(alpha: 0.5)
+                  : MyTheme.secondaryContainerColor,
+            ],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
           borderRadius: BorderRadius.circular(MyTheme.radiusLg),
         ),
         alignment: Alignment.center,
-        child: Text(
-          'Save Changes',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: saving
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Colors.white,
+                ),
+              )
+            : Text(
+                'Save Changes',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

@@ -47,19 +47,4 @@ class Day {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'date': date.toIso8601String(), 
-      'tasks': tasks.map((task) => task.toMap()).toList(),
-    };
-  }
-
-  factory Day.fromMap(Map<String, dynamic> map) {
-    return Day(
-      date: DateTime.parse(map['date']),
-      tasks: List<Task>.from(
-        (map['tasks'] ?? []).map((taskMap) => Task.fromMap(taskMap)),
-      ),
-    );
-  }
 }

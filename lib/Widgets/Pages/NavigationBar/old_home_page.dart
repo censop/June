@@ -13,21 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late String todayString;
-
-  late List<Task> tasks = [ //DUMMY TASK
-    Task(
-      taskName: "Study block", 
-      date: DateTime.now(), 
-      description: "Tessst", 
-      startTime: TimeOfDay(hour: 11, minute: 30), 
-      endTime: TimeOfDay(hour: 15, minute: 30)),
-    Task(
-      taskName: "Lalala Lololo", 
-      date: DateTime.now(), 
-      description: "", 
-      startTime: TimeOfDay(hour: 16, minute: 30), 
-      endTime: TimeOfDay(hour: 19, minute: 00)),
-  ];
+  final List<Task> tasks = [];
 
   @override
   void initState() {
@@ -41,42 +27,37 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize:  MainAxisSize.max,
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:[
+          children: [
             Text(
               "Good Morning, CANSU",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Text( //will not be like this when database is loaded
+            Text(
               todayString,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withAlpha(100)
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
               ),
             ),
-            SizedBox(height: 20,),
-            DateSlider(),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20),
+            const DateSlider(),
+            const SizedBox(height: 20),
             ListView.builder(
               shrinkWrap: true,
               itemCount: tasks.length,
               itemBuilder: (context, index) {
-                final Task currTask = tasks[index];
-
-                return TaskCard(task: currTask);
+                return TaskCard(task: tasks[index]);
               },
             ),
-          ] 
+          ],
         ),
       ),
     );
   }
 
   String getTodayString() {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEEE, MMMM d').format(now);
-
-    return formattedDate;
+    return DateFormat('EEEE, MMMM d').format(DateTime.now());
   }
 }
