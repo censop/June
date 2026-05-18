@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:june/Widgets/Pages/NavigationBar/settings_page.dart';
+import 'package:june/Widgets/Pages/app_preferences_page.dart';
 import 'package:june/Widgets/Screens/app_shell.dart';
 import 'package:june/Widgets/Pages/Authentication/forgot_password_page.dart';
 import 'package:june/Widgets/Pages/Authentication/sign_in_page.dart';
@@ -58,6 +60,8 @@ class MyApp extends StatelessWidget {
         Routes.forgotPasswordPage: (context) => const ForgotPasswordPage(),
         Routes.schedulePage: (context) => const AppShell(initialIndex: 2),
         Routes.aiChatPage: (context) => const AppShell(initialIndex: 3),
+        Routes.appPrefPage: (context) => const AppPreferencesPage(),
+        Routes.settingsPage: (context) => const SettingsPage(),
       },
       theme: MyTheme.lightTheme,
     );

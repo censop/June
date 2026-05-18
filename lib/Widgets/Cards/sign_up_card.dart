@@ -85,7 +85,7 @@ class _SignUpCardState extends State<SignUpCard> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.signInPage);
+                //Navigator.of(context).pushNamed(Routes.signInPage);
               },
             ),
           ],

@@ -69,7 +69,7 @@ class _SignInCardState extends State<SignInCard> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).pushNamed(Routes.forgotPasswordPage);
+                //Navigator.of(context).pushNamed(Routes.forgotPasswordPage);
               },
             ),
             SizedBox(height: 24,),
