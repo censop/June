@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:june/Models/day.dart';
 import 'package:june/Models/task.dart';
 import 'package:june/Widgets/Cards/task_card.dart';
 import 'package:june/Widgets/DateSlider/date_slider.dart';

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(flutter analyze *)"
+      "Bash(flutter analyze *)",
+      "Bash(Remove-Item \"C:\\\\Users\\\\90505\\\\june\\\\lib\\\\Widgets\\\\AI\\\\ai_app_bar.dart\")",
+      "Bash(Remove-Item \"C:\\\\Users\\\\90505\\\\june\\\\lib\\\\Widgets\\\\Schedule\\\\schedule_app_bar.dart\")"
     ]
   }
 }

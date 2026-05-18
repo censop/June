@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:june/Models/day.dart';
 import 'package:june/Widgets/Schedule/block_time_cta.dart';
-import 'package:june/Widgets/Schedule/schedule_app_bar.dart';
 import 'package:june/Widgets/Schedule/schedule_header.dart';
 import 'package:june/Widgets/Schedule/welcome.dart';
 import 'package:june/Widgets/Schedule/schedule_task_card.dart';
@@ -25,7 +24,6 @@ class _ScheduleBodyState extends State<ScheduleBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const ScheduleAppBar(),
         const SizedBox(height: MyTheme.spaceLg),
         const Welcome(username: 'Beliz'),
         const SizedBox(height: MyTheme.spaceLg),

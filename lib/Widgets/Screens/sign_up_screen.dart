@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:june/Services/auth_service.dart';
 import 'package:june/Widgets/Auth/auth_text_field.dart';
+import 'package:june/routes.dart';
 import 'package:june/Widgets/Auth/dot_logo_widget.dart';
 import 'package:june/Widgets/Auth/password_strength_bar.dart';
 import 'package:june/Widgets/Auth/social_auth_button.dart';
@@ -15,9 +17,31 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
+  bool _isLoading = false;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _authService = AuthService();
+
+  Future<void> _signUp() async {
+    if (_isLoading) return;
+    setState(() => _isLoading = true);
+    try {
+      await _authService.signUp(
+        _emailController.text.trim(),
+        _passwordController.text,
+        name: _nameController.text.trim(),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -153,24 +177,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: _isLoading ? null : _signUp,
           borderRadius: BorderRadius.circular(14),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'CREATE ACCOUNT',
-                style: TextStyle(
-                  fontFamily: MyTheme.interFont,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.5,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_forward, color: Colors.white, size: 18),
-            ],
+            children: _isLoading
+                ? const [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]
+                : const [
+                    Text(
+                      'CREATE ACCOUNT',
+                      style: TextStyle(
+                        fontFamily: MyTheme.interFont,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.5,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                  ],
           ),
         ),
       ),
@@ -243,7 +278,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: MyTheme.signUpTeal,
                   fontWeight: FontWeight.w600,
                 ),
-                recognizer: TapGestureRecognizer()..onTap = () {},
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => Navigator.of(context).pushNamed(Routes.signInPage),
               ),
             ],
           ),
